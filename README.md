@@ -14,4 +14,8 @@ DermaAI is an innovative application designed to assist users in identifying and
 
 ## Tech Stack
 
+<<<<<<< HEAD
 - TBD
+=======
+- TBD
+>>>>>>> 2672c848e871ed82c78ff1c60d63bd0c52fb69ee
