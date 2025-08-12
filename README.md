@@ -18,4 +18,8 @@ DermaAI is an innovative application designed to assist users in identifying and
 
 - TBD
 
+## 📄 API Documentation
+See the full [API Contract](API_CONTRACT.md) for endpoints, request formats, and responses.
+
+
 
