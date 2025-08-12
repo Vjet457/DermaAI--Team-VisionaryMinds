@@ -1,215 +1,92 @@
-API Contract – DermaAI
-Version: 1.0
-Project: DermaAI – Visionary Minds
-Date: 12-Aug-2025
+API Contract
+This document defines the contract between the frontend and backend for the Skin Disorder Detection API.
+It describes all available endpoints, their inputs, and outputs. This is the single source of truth for API communication.
 
+1. Home Page Endpoint
+Feature: Display the homepage.
+HTTP Method: GET
+Endpoint Path: /
+Description: Returns the main HTML page for the web application.
 
+Request Body: None
 
-1. Overview
-   This document specifies the contract between the frontend and backend for the DermaAI application.
+Success Response (200 OK):
 
-Backend Technology: Python (Flask)
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html>
+  <!-- HTML content of index.html -->
+</html>
+Error Response(s):
+None
 
-Response Format: JSON
-
-
-
-2. Core Features
-   User Registration – Create a new user account.
-
-User Login (optional) – Authenticate an existing user.
-
-Upload Image for Prediction – Upload an image and receive a skin disease prediction with a confidence score.
-
-Get Disease Information – Retrieve details about a specific skin disease.
-
-View All Predictions – Fetch all predictions made in the current session.
-
-View All Users (optional) – Retrieve all registered user emails.
-
-
-
-3. Endpoints
-   3.1 Register a New User
-   Method: POST
-
-Path: /api/register
-
-Description: Registers a new user.
+2. Prediction Endpoint
+Feature: Predict skin disorder from an uploaded image.
+HTTP Method: POST
+Endpoint Path: /predict
+Description: Accepts an image file, checks if it contains skin, runs it through the ML model, and returns the predicted skin disorder with probability and treatment suggestions.
 
 Request Body:
 
-json
+Content Type: multipart/form-data
+
+Fields:
+
+file (file, required) — Image file of the suspected skin disorder (.png, .jpg, .jpeg).
+
+Example Request (cURL):
+
+bash
 Copy
 Edit
-{
-"username": "vishwajeet",
-"email": "vishwajeet@example.com",
-"password": "securepassword"
-}
+curl -X POST "http://localhost:5000/predict" \
+  -F "file=@acne.jpg"
 Success Response (200 OK):
 
 json
 Copy
 Edit
 {
-"message": "User registered successfully",
-"user\_id": "12345"
+  "prediction": "Acne",
+  "probability": 0.87,
+  "treatments": [
+    "Use medicated face wash",
+    "Consult dermatologist"
+  ]
 }
-Error Responses:
+Error Response(s):
 
-400 Bad Request
-
-json
-Copy
-Edit
-{ "error": "Username, email, and password are required." }
-409 Conflict
+400 Bad Request — Invalid File Type
 
 json
 Copy
 Edit
-{ "error": "User with this email already exists." }
-
-
-3.2 User Login (Optional)
-Method: POST
-
-Path: /api/login
-
-Description: Authenticates user and returns a token.
-
-Request Body:
+{"error": "Only image files are allowed"}
+400 Bad Request — No Skin Detected
 
 json
 Copy
 Edit
-{
-"email": "vishwajeet@example.com",
-"password": "securepassword"
-}
-Success Response (200 OK):
+{"error": "Image does not contain skin"}
+400 Bad Request — Low Confidence
 
 json
 Copy
 Edit
-{ "token": "JWT\_TOKEN\_HERE" }
-Error Response (401 Unauthorized):
+{"error": "Inconclusive result. Please consult a healthcare professional."}
+Data Models
+Prediction Response Model
+Field	                    Type	                                   Description
+prediction    	          string	                                   Name of the predicted skin disorder
+probability              float	                                      Confidence score (0 to 1)
+treatments	             string[]                                   List of suggested treatments
 
-json
-Copy
-Edit
-{ "error": "Invalid email or password." }
+Error Response Model
 
-
-3.3 Upload Image for Prediction
-Method: POST
-
-Path: /api/predict
-
-Description: Uploads an image and returns prediction results.
-
-Request Body:
-
-Content-Type: multipart/form-data
-
-Field: image (file, required)
-
-Success Response (200 OK):
-
-json
-Copy
-Edit
-{
-"prediction\_label": "Psoriasis",
-"confidence": 0.92
-}
-Error Responses:
-
-400 Bad Request
-
-json
-Copy
-Edit
-{ "error": "Only .jpg, .jpeg, and .png formats are allowed." }
-500 Internal Server Error
-
-json
-Copy
-Edit
-{ "error": "An error occurred while processing the image." }
+Field	           Type	              Description
+error	           string	              Error message
 
 
-3.4 Get Disease Information
-Method: GET
-
-Path: /api/disease/{name}
-
-Description: Retrieves information about a specific skin disease.
-
-Success Response (200 OK):
-
-json
-Copy
-Edit
-{
-"name": "Psoriasis",
-"description": "A chronic autoimmune condition that causes skin cells to multiply rapidly.",
-"symptoms": \["Red patches", "Itching"],
-"prevention": \["Moisturize skin", "Avoid triggers"]
-}
-Error Response (404 Not Found):
-
-json
-Copy
-Edit
-{ "error": "Disease information not found." }
-
-
-3.5 View All Predictions
-Method: GET
-
-Path: /api/predictions
-
-Description: Returns all predictions from the current session.
-
-Success Response (200 OK):
-
-json
-Copy
-Edit
-\[
-{ "filename": "image1.jpg", "label": "Eczema", "confidence": 0.87 },
-{ "filename": "image2.jpg", "label": "Psoriasis", "confidence": 0.92 }
-]
-3.6 View All Users (Optional)
-Method: GET
-
-Path: /api/users
-
-Description: Retrieves a list of registered user emails.
-
-Success Response (200 OK):
-
-json
-Copy
-Edit
-\[ "vishwajeet@example.com", "sanket@example.com" ]
-
-
-4. Error Format
-All error responses will follow this format:
-
-json
-Copy
-Edit
-{ "error": "Description of the error" }
-
-
-5. Notes
-All API responses are in JSON format.
-
-Allowed image formats: .jpg, .jpeg, .png.
-
-Optional endpoints may require authentication in the future
 
