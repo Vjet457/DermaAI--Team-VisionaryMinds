@@ -1,0 +1,12 @@
+cat > .gitignore << 'GI'
+# Python / Flask
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+instance/
+.env
+venv/
+ENV/
+env/
+GI
