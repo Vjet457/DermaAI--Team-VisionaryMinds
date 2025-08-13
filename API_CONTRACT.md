@@ -38,16 +38,11 @@ file (file, required) — Image file of the suspected skin disorder (.png, .jpg,
 
 Example Request (cURL):
 
-bash
-Copy
-Edit
+
 curl -X POST "http://localhost:5000/predict" \
   -F "file=@acne.jpg"
 Success Response (200 OK):
 
-json
-Copy
-Edit
 {
   "prediction": "Acne",
   "probability": 0.87,
@@ -60,21 +55,15 @@ Error Response(s):
 
 400 Bad Request — Invalid File Type
 
-json
-Copy
-Edit
+
 {"error": "Only image files are allowed"}
 400 Bad Request — No Skin Detected
 
-json
-Copy
-Edit
+
 {"error": "Image does not contain skin"}
 400 Bad Request — Low Confidence
 
-json
-Copy
-Edit
+
 {"error": "Inconclusive result. Please consult a healthcare professional."}
 Data Models
 Prediction Response Model
