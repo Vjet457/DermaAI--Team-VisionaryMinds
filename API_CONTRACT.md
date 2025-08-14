@@ -1,73 +1,201 @@
-API Contract — Skin Disorder Detection API
+API Contract – Derma AI
 
-This document defines the contract between the frontend and backend for the Skin Disorder Detection API.
-It describes all available endpoints, their inputs, and outputs.
-This is the single source of truth for API communication.
-
-------------------------------------------------------------
-1. Home Page Endpoint
-------------------------------------------------------------
-Feature: Display the homepage.
-HTTP Method: GET
-Endpoint Path: /
-Description: Returns the main HTML page for the web application.
-
-Request Body: None
-
-Success Response (200 OK):
-<!DOCTYPE html>
-<html>
-  <!-- HTML content of index.html -->
-</html>
-
-Error Responses: None
+This document defines the agreed contract between the frontend and backend for the Derma AI application.
+It will be the single source of truth for all API communication.
 
 ------------------------------------------------------------
-2. Prediction Endpoint
+1. User Authentication
 ------------------------------------------------------------
-Feature: Predict skin disorder from an uploaded image.
+
+1.1 Register User
+Feature: Create a new account
 HTTP Method: POST
-Endpoint Path: /predict
-Description: Accepts an image file, checks if it contains skin, runs it through the ML model, and returns the predicted skin disorder with probability and treatment suggestions.
+Endpoint Path: /api/auth/register
+Description: Creates a new user with email, username, and password.
 
-Request Body:
-Content-Type: multipart/form-data
+Request Body (JSON):
+{
+  "username": "string",
+  "email": "string",
+  "password": "string"
+}
 
-Fields:
-- file (file, required) — Image file of the suspected skin disorder (.png, .jpg, .jpeg).
+Success Response (201 Created):
+{
+  "message": "User registered successfully",
+  "user_id": "uuid"
+}
 
-Example Request (cURL):
-curl -X POST "http://localhost:5000/predict" \
-  -F "file=@acne.jpg"
+Error Response (400 Bad Request):
+{
+  "error": "Email already registered"
+}
+
+------------------------------------------------------------
+1.2 Login
+Feature: Authenticate and retrieve a token
+HTTP Method: POST
+Endpoint Path: /api/auth/login
+Description: Validates credentials and returns a JWT token.
+
+Request Body (JSON):
+{
+  "email": "string",
+  "password": "string"
+}
 
 Success Response (200 OK):
 {
-  "prediction": "Acne",
-  "probability": 0.87,
-  "treatments": [
-    "Use medicated face wash",
-    "Consult dermatologist"
-  ]
+  "token": "jwt_token_string",
+  "user": {
+    "id": "uuid",
+    "username": "string",
+    "email": "string"
+  }
 }
 
-Error Responses:
-400 Bad Request — Invalid File Type
-{"error": "Only image files are allowed"}
-
-400 Bad Request — No Skin Detected
-{"error": "Image does not contain skin"}
-
-400 Bad Request — Low Confidence
-{"error": "Inconclusive result. Please consult a healthcare professional."}
+Error Response (401 Unauthorized):
+{
+  "error": "Invalid email or password"
+}
 
 ------------------------------------------------------------
-Data Models
+1.3 Logout
+Feature: Invalidate the current session
+HTTP Method: POST
+Endpoint Path: /api/auth/logout
+Description: Logs the user out by invalidating the token.
+
+Success Response (200 OK):
+{
+  "message": "Logged out successfully"
+}
+
+------------------------------------------------------------
+2. Diagnosis Module
 ------------------------------------------------------------
 
-Prediction Response Model:
-- prediction (string): Name of the predicted skin disorder
-- probability (float): Confidence score (0 to 1)
-- treatments (string[]): List of suggested treatments
+2.1 Upload Image for Analysis
+Feature: Upload a skin image for AI diagnosis
+HTTP Method: POST
+Endpoint Path: /api/diagnosis/upload
+Description: Accepts an image, runs AI model, and returns results.
 
-Error Response Model:
-- error (string): Description of the error that occurred
+Request Body (multipart/form-data):
+- image: binary file
+
+Success Response (200 OK):
+{
+  "diagnosis_id": "uuid",
+  "diagnosis_result": "Eczema",
+  "confidence": 0.95,
+  "image_url": "string",
+  "created_at": "2025-08-13T10:15:30Z"
+}
+
+Error Response (400 Bad Request):
+{
+  "error": "Invalid or missing image file"
+}
+
+------------------------------------------------------------
+2.2 Get Diagnosis History
+Feature: View all past diagnosis results
+HTTP Method: GET
+Endpoint Path: /api/diagnosis/history
+Description: Returns list of all diagnosis records for logged-in user.
+
+Success Response (200 OK):
+[
+  {
+    "diagnosis_id": "uuid",
+    "diagnosis_result": "Psoriasis",
+    "confidence": 0.87,
+    "image_url": "string",
+    "created_at": "2025-08-12T14:20:00Z"
+  }
+]
+
+Error Response (401 Unauthorized):
+{
+  "error": "Authentication required"
+}
+
+------------------------------------------------------------
+2.3 Get Single Diagnosis Detail
+Feature: View details of a specific diagnosis
+HTTP Method: GET
+Endpoint Path: /api/diagnosis/{diagnosis_id}
+Description: Fetches detailed info for a given diagnosis.
+
+Success Response (200 OK):
+{
+  "diagnosis_id": "uuid",
+  "diagnosis_result": "Melanoma",
+  "confidence": 0.98,
+  "image_url": "string",
+  "recommendations": [
+    "Consult a dermatologist",
+    "Schedule a follow-up test"
+  ],
+  "created_at": "2025-08-10T09:45:00Z"
+}
+
+Error Response (404 Not Found):
+{
+  "error": "Diagnosis record not found"
+}
+
+------------------------------------------------------------
+3. User Profile Management
+------------------------------------------------------------
+
+3.1 Get Profile
+Feature: Retrieve logged-in user's profile
+HTTP Method: GET
+Endpoint Path: /api/user/profile
+
+Success Response (200 OK):
+{
+  "id": "uuid",
+  "username": "string",
+  "email": "string",
+  "joined_date": "2025-07-25T12:00:00Z"
+}
+
+------------------------------------------------------------
+3.2 Update Profile
+Feature: Update username/email
+HTTP Method: PUT
+Endpoint Path: /api/user/profile
+
+Request Body (JSON):
+{
+  "username": "string",
+  "email": "string"
+}
+
+Success Response (200 OK):
+{
+  "message": "Profile updated successfully"
+}
+
+Error Response (400 Bad Request):
+{
+  "error": "Invalid email format"
+}
+
+------------------------------------------------------------
+4. Error Response Standard
+------------------------------------------------------------
+All error responses will follow this structure:
+{
+  "error": "Description of the error"
+}
+
+------------------------------------------------------------
+Notes:
+- All authenticated endpoints require Authorization: Bearer <token> header.
+- Dates/times are in ISO 8601 UTC format.
+- Image URLs are returned as public links to files stored in cloud storage.
+
