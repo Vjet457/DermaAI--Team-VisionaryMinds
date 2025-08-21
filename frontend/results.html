@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+  <meta charset="utf-8" />
+  <title>Derma AI</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    WebFont.load({
+      google: {
+        families: [
+          "Montserrat:100,200,300,400,500,600,700,800,900",
+        ],
+      },
+    });
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Montserrat", sans-serif;
+      background-color: #2ecc71; /* Main green background */
+      color: white;
+    }
+
+    /* Navbar */
+    .navbar-logo-left {
+      background: #27ae60;
+      padding: 10px 20px;
+    }
+
+    .navbar-brand h1 {
+      margin: 0;
+      font-size: 24px;
+      color: white;
+    }
+
+    .nav-link,
+    .button-primary {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 15px;
+    }
+
+    .button-primary {
+      background: white;
+      color: #27ae60;
+      padding: 8px 16px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .button-primary:hover {
+      background: #ecf0f1;
+    }
+
+    /* Diagnosis Section */
+    .testimonial-stack {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .testimonial-card-three {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 0 auto;
+      max-width: 700px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .testimonial-card-heading {
+      margin-bottom: 15px;
+      font-size: 26px;
+      color: white;
+    }
+
+    .testimonial-text-three {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author-name-three {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #ecf0f1;
+    }
+
+    .testimonial-title ul {
+      list-style: circle;
+      padding-left: 20px;
+      text-align: left;
+    }
+
+    em {
+      font-size: 14px;
+      display: block;
+      margin-top: 20px;
+      color: #f1f1f1;
+    }
+
+    /* Footer */
+    .footer-subscribe-2 {
+      background: #27ae60;
+      padding: 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .footer-legal-block-2 a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .footer-legal-block-2 a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-divider-two-2 {
+      border-top: 1px solid white;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div class="navbar-logo-left">
+    <div class="navbar-wrapper" style="display:flex; align-items:center; justify-content:space-between;">
+      <a class="navbar-brand" href="#">
+        <h1>Derma AI</h1>
+      </a>
+      <nav class="nav-menu-wrapper">
+        <a class="nav-link" href="/" target="_blank">Home</a>
+        <a class="button-primary" href="#">Contact us</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Diagnosis Section -->
+  <section class="testimonial-stack">
+    <div class="container">
+      <div class="testimonial-card-three">
+        <div class="testimonial-card-content">
+          <h3 class="testimonial-card-heading">Skin Condition Diagnosis</h3>
+          <p class="testimonial-text-three">
+            Based on our analysis, you may have <strong><i>{{ prediction }}</i></strong>.
+          </p>
+          <div class="testimonial-info-four">
+            <h3 class="testimonial-author-name-three">Common treatments include:</h3>
+            <div class="testimonial-title">
+              <ul>
+                {% for treatment in treatments %}
+                <li>{{ treatment }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <em>Disclaimer: This information is provided for educational purposes
+          only and should not be used as a substitute for medical advice.
+          Please consult a healthcare professional for an accurate diagnosis
+          and treatment plan.</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <section class="footer-subscribe-2">
+    <div class="container">
+      <div class="footer-divider-two-2"></div>
+      <div class="footer-bottom-2">
+        <div class="footer-legal-block-2">
+          <a href="#">Terms Of Use</a> | 
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
