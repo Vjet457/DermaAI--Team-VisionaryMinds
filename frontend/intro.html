@@ -1,1 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DERMA-AI | Intro</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f5efe6; /* beige background */
+      font-family: "Georgia", serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
 
+    .logo {
+      max-width: 250px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #6a7b8c; /* matches the logo’s soft blue */
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      background-color: #6a7b8c;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #556270;
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ url_for('static', filename='WhatsApp Image 2025-08-22 at 02.16.25_cfa5214b.jpg') }}" alt="DERMA-AI Logo" class="logo">
+  <h1>DERMA-AI</h1>
+  <a href="{{ url_for('home') }}" class="btn">Enter Website</a>
+</body>
+</html>
